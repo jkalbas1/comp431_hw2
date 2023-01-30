@@ -239,7 +239,7 @@ sender = ""
 for line in stdin:
     print(line, end="")
 
-    if not check_valid_cmd(line):
+    if not check_valid_cmd(line) and state != "DATA":
         print("500 Syntax error: command unrecognized")
         state = ""
         receivers = []
@@ -268,8 +268,9 @@ for line in stdin:
             receivers = []
             data_seen = ""
     elif(line[0:4] == "RCPT"):
-        if state != "mail" or state != "rcpt":
+        if state != "mail" and state != "rcpt":
             print("503 Bad sequence of commands")
+            print(state)
             state = ""
             receivers = []
             data_seen = ""
