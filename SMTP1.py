@@ -251,7 +251,7 @@ for line in stdin:
             state = ""
             receivers = []
             data_seen = ""
-    else
+    else:
         if state == "DATA":
             if line == ".\n":
                 for add in receivers:
