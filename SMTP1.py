@@ -100,6 +100,10 @@ def path(line):
     if not local_part(line):
         return False
     copy_line = line.split(seen)[1]
+    
+    if(len(copy_line) == 0):
+        print("501 Syntax error in parameters or arguments")
+        return False
     if(copy_line[0] != "@"):
         print("501 Syntax error in parameters or arguments")
         return False
@@ -119,6 +123,9 @@ def path(line):
 def crlf(line):
     global seen
     copy_line = line.split(seen)[1]
+    if(len(copy_line) == 0):
+        return False
+        print("501 Syntax error in parameters or arguments")
     if copy_line[0] != "\n":
         print("501 Syntax error in parameters or arguments")
         return False
@@ -210,6 +217,12 @@ for line in stdin:
     print(line, end="")
 
     if(line[0:4] == "MAIL"):
+        if state != "":
+            print("503 Bad sequence of commands")
+            state = ""
+            receivers = []
+            data_seen = ""
+            continue
         if mail_from(line) and state == "":
             print("250 OK")
             state = "mail"
@@ -223,6 +236,12 @@ for line in stdin:
             receivers = []
             data_seen = ""
     elif(line[0:4] == "RCPT"):
+        if state != "mail" or state != "rcpt":
+            print("503 Bad sequence of commands")
+            state = ""
+            receivers = []
+            data_seen = ""
+            continue
         if rcpt(line):
             if state == "mail" or state == "rcpt":
                 print("250 OK")
@@ -238,6 +257,12 @@ for line in stdin:
             receivers = []
             data_seen = ""
     elif(line [0:4] == "DATA"):
+        if state != "rcpt":
+            print("503 Bad sequence of commands")
+            state = ""
+            receivers = []
+            data_seen = ""
+            continue
         if data(line):
             if state == "rcpt":
                 print("354 Start mail input; end with <CRLF>.<CRLF>")
