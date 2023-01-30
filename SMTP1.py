@@ -70,7 +70,7 @@ def domain(line):
     run_count = 0
     for sp in line:
         if count == 0 and not sp.isalpha():
-            print("501 syntax error in parameters or arguments")
+            print("501 Syntax error in parameters or arguments")
             return False
         if sp == ".":
             seen += sp
@@ -86,7 +86,7 @@ def domain(line):
         else:
             break
     if line[run_count-1] == ".":
-        print("501 syntax error in parameters or arguments")
+        print("501 Syntax error in parameters or arguments")
         return False
     return True
 
@@ -94,14 +94,14 @@ def path(line):
     global seen
     copy_line = line.split(seen)[1]
     if(copy_line[0] != "<"):
-        print("501 syntax error in parameters or arguments")
+        print("501 Syntax error in parameters or arguments")
         return False
     seen += "<"
     if not local_part(line):
         return False
     copy_line = line.split(seen)[1]
     if(copy_line[0] != "@"):
-        print("501 syntax error in parameters or arguments")
+        print("501 Syntax error in parameters or arguments")
         return False
     
     seen += "@"
@@ -111,7 +111,7 @@ def path(line):
 
     copy_line = line.split(seen)[1]
     if copy_line[0] != ">":
-        print("501 syntax error in parameters or arguments")
+        print("501 Syntax error in parameters or arguments")
         return False
     seen += ">"
     return True
@@ -120,7 +120,7 @@ def crlf(line):
     global seen
     copy_line = line.split(seen)[1]
     if copy_line[0] != "\n":
-        print("501 syntax error in parameters or arguments")
+        print("501 Syntax error in parameters or arguments")
         return False
     return True
 
