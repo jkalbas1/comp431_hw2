@@ -211,7 +211,7 @@ for line in stdin:
 
     if(line[0:4] == "MAIL"):
         if mail_from(line) and state == "":
-            print("250 ok")
+            print("250 OK")
             state = "mail"
         elif state != "":
             print("503 Bad sequence of commands")
@@ -225,7 +225,7 @@ for line in stdin:
     elif(line[0:4] == "RCPT"):
         if rcpt(line):
             if state == "mail" or state == "rcpt":
-                print("250 ok")
+                print("250 OK")
                 ## add recipient to receivers list
                 state = "rcpt"
             else:
@@ -251,7 +251,7 @@ for line in stdin:
             state = ""
             receivers = []
             data_seen = ""
-    else:
+    else
         if state == "DATA":
             if line == ".\n":
                 for add in receivers:
