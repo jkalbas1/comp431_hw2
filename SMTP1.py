@@ -254,6 +254,7 @@ for line in stdin:
     else:
         if state == "DATA":
             if line == ".\n":
+                print("250 OK")
                 for add in receivers:
                     file = open("forward/" + add, "a+")
                     file.write("From: " + sender + "\n")
