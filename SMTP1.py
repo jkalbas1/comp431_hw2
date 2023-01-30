@@ -52,7 +52,7 @@ def local_part(line):
     for sp in line:
         if sp in special or sp in space:
             if count == 0:
-                print("501 syntax error in parameters or arguments")
+                print("501 Syntax error in parameters or arguments")
                 return False
             return True
         else:
@@ -248,7 +248,7 @@ for line in stdin:
     
     seen = ""
 
-    if(line[0:4] == "MAIL"):
+    if(line[0:4] == "MAIL") and state != "DATA":
         if state != "":
             print("503 Bad sequence of commands")
             state = ""
@@ -267,7 +267,7 @@ for line in stdin:
             state = ""
             receivers = []
             data_seen = ""
-    elif(line[0:4] == "RCPT"):
+    elif(line[0:4] == "RCPT") and state != "DATA":
         if state != "mail" and state != "rcpt":
             print("503 Bad sequence of commands")
             print(state)
@@ -289,7 +289,7 @@ for line in stdin:
             state = ""
             receivers = []
             data_seen = ""
-    elif(line [0:4] == "DATA"):
+    elif(line [0:4] == "DATA") and state != "DATA":
         if state != "rcpt":
             print("503 Bad sequence of commands")
             state = ""
