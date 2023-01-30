@@ -205,6 +205,29 @@ def data(line):
 
     return True
 
+def check_valid_cmd(line):
+    global seen
+    seen = ""
+    if(len(line) < 4):
+        return False
+
+    if line[0:4] == "MAIL":
+        seen = "MAIL"
+        if not whitespace(line):
+            return False
+        if not from_token(line):
+            return False
+
+    elif line[0:4] == "RCPT":
+        seen = "RCPT"
+        if not whitespace(line):
+            return False
+        if not to_token(line):
+            return False
+    
+    elif line[0:4] != "DATA":
+        return False
+    return True
 
 #Hold a string representation of previous previous message
 state = ""
@@ -215,6 +238,15 @@ sender = ""
 
 for line in stdin:
     print(line, end="")
+
+    if not check_valid_cmd(line):
+        print("500 Syntax error: command unrecognized")
+        state = ""
+        receivers = []
+        data_seen = ""
+        continue
+    
+    seen = ""
 
     if(line[0:4] == "MAIL"):
         if state != "":
