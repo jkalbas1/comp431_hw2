@@ -232,13 +232,13 @@ def check_valid_cmd(line):
 #Hold a string representation of previous previous message
 state = ""
 data_seen = ""
+per = True
 
 #implement these below
 sender = ""
 
 for line in stdin:
     print(line, end="")
-
     if not check_valid_cmd(line) and state != "DATA":
         print("500 Syntax error: command unrecognized")
         state = ""
@@ -270,7 +270,6 @@ for line in stdin:
     elif(line[0:4] == "RCPT") and state != "DATA":
         if state != "mail" and state != "rcpt":
             print("503 Bad sequence of commands")
-            print(state)
             state = ""
             receivers = []
             data_seen = ""
@@ -300,6 +299,7 @@ for line in stdin:
             if state == "rcpt":
                 print("354 Start mail input; end with <CRLF>.<CRLF>")
                 state = "DATA"
+                per = False
             else:
                 print("503 Bad sequence of commands")
                 state = ""
@@ -312,6 +312,7 @@ for line in stdin:
     else:
         if state == "DATA":
             if line == ".\n":
+                per = True
                 print("250 OK")
                 for add in receivers:
                     file = open("forward/" + add, "a+")
@@ -332,3 +333,5 @@ for line in stdin:
             data_seen = ""
             receivers = []
 
+if state == "DATA" and not per:
+    print("501 Syntax error in parameters or arguments")
